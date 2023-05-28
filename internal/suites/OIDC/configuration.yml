@@ -1,0 +1,79 @@
+---
+server:
+  address: 'tcp://:9091'
+  tls:
+    certificate: /pki/public.backend.crt
+    key: /pki/private.backend.pem
+
+log:
+  level: debug
+
+jwt_secret: unsecure_secret
+
+authentication_backend:
+  file:
+    path: /config/users.yml
+
+session:
+  secret: unsecure_session_secret
+
+  cookies:
+    - domain: 'example.com'
+      authelia_url: 'https://login.example.com:8080'
+      expiration: 3600  # 1 hour
+      inactivity: 300  # 5 minutes
+      remember_me: 1y
+
+  # We use redis here to keep the users authenticated when Authelia restarts
+  # It eases development.
+  redis:
+    host: redis
+    port: 6379
+
+storage:
+  encryption_key: a_not_so_secure_encryption_key
+  local:
+    path: /config/db.sqlite
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: "home.example.com"
+      policy: bypass
+    - domain: "public.example.com"
+      policy: bypass
+    - domain: "admin.example.com"
+      policy: two_factor
+    - domain: "secure.example.com"
+      policy: two_factor
+    - domain: "singlefactor.example.com"
+      policy: one_factor
+    - domain: "oidc.example.com"
+      policy: two_factor
+    - domain: "oidc-public.example.com"
+      policy: bypass
+
+notifier:
+  smtp:
+    address: 'smtp://smtp:1025'
+    sender: admin@example.com
+    disable_require_tls: true
+
+identity_providers:
+  oidc:
+    enable_client_debug_messages: true
+    hmac_secret: IVPWBkAdJHje3uz7LtFTDU2pFUfh39Xm
+    clients:
+      - id: oidc-tester-app
+        secret: foobar
+        authorization_policy: two_factor
+        redirect_uris:
+          - https://oidc.example.com:8080/oauth2/callback
+      # This client is used for testing purpose. As of now, the app must be protected by ACLs
+      # otherwise it won't work properly.
+      - id: oidc-tester-app-public
+        secret: foobar
+        authorization_policy: one_factor
+        redirect_uris:
+          - https://oidc-public.example.com:8080/oauth2/callback
+...

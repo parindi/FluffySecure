@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+set +u
+
+INTEGRATION() {
+  if [[ "${BUILDKITE_BRANCH}" =~ ^renovate/ ]]; then
+    sed -i "s/${CONTAINER}/${CONTAINER}:renovate/" "${FILE}"
+  elif [[ "${BUILDKITE_BRANCH}" != "master" ]] && [[ ! "${BUILDKITE_BRANCH}" =~ .*:.* ]]; then
+    sed -i "s/${CONTAINER}/${CONTAINER}:${BUILDKITE_BRANCH}/" "${FILE}"
+  elif [[ "${BUILDKITE_BRANCH}" != "master" ]] && [[ "${BUILDKITE_BRANCH}" =~ .*:.* ]]; then
+    sed -i "s/${CONTAINER}/${CONTAINER}:PR${BUILDKITE_PULL_REQUEST}/" "${FILE}"
+  fi
+}
+
+if [[ "${BUILDKITE_LABEL}" == ":service_dog: Linting" ]]; then
+  cd web && pnpm install && cd ../
+fi
+
+if [[ "${BUILDKITE_LABEL}" == ":docker: Build Image [coverage]" ]]; then
+  cp -R /buildkite/.local .
+fi
+
+if [[ "${BUILDKITE_STEP_KEY}" =~ build-deb-package-(arm64|armhf) && "${BUILDKITE_AGENT_NAME}" =~ sauron* ]]; then
+  docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+fi
+
+if [[ "${BUILDKITE_LABEL}" =~ ":debian: Build Package" ]]; then
+  buildkite-agent artifact download "authelia-linux-${ARCH}.tar.gz" .
+fi
+
+if [[ "${BUILDKITE_LABEL}" =~ ":selenium:" ]]; then
+  echo "--- :docker: Extract and load build container"
+  mkdir coverage
+
+  if [[ "${BUILDKITE_AGENT_NAME}" =~ ^vega[0-9]+$ ]]; then
+    BUILDKITE_S3_ENDPOINT="${S3_ENDPOINT}" BUILDKITE_ARTIFACT_UPLOAD_DESTINATION="${S3_BUCKET}" BUILDKITE_S3_ACCESS_URL="${S3_ACCESS_URL}" BUILDKITE_S3_ACCESS_KEY_ID="${S3_ACCESS_KEY_ID}" BUILDKITE_S3_SECRET_ACCESS_KEY="${S3_SECRET_ACCESS_KEY}" buildkite-agent artifact download "authelia-image-coverage-vega*" .
+    mv authelia-image-coverage-vega.tar.zst authelia-image-coverage.tar.zst
+  else
+    buildkite-agent artifact download "authelia-image-coverage.*" .
+  fi
+
+  if [[ "${SUITE}" == "Kubernetes" ]]; then
+    zstd -d authelia-image-coverage.tar.zst --stdout > ./internal/suites/example/kube/authelia-image-coverage.tar
+  else
+    zstdcat "authelia-image-coverage.tar.zst" | docker load
+  fi
+
+  if [[ "${BUILD_DUO}" == "true" ]] && [[ "${SUITE}" == "DuoPush" ]]; then
+    CONTAINER="integration-duo"
+    FILE="internal/suites/example/compose/duo-api/docker-compose.yml"
+    INTEGRATION
+  elif [[ "${BUILD_HAPROXY}" == "true" ]] && [[ "${SUITE}" == "HAProxy" ]]; then
+    CONTAINER="integration-haproxy"
+    FILE="internal/suites/example/compose/haproxy/docker-compose.yml"
+    INTEGRATION
+  elif [[ "${BUILD_SAMBA}" == "true" ]] && [[ "${SUITE}" == "ActiveDirectory" ]]; then
+      CONTAINER="integration-samba"
+      FILE="internal/suites/example/compose/samba/docker-compose.yml"
+      INTEGRATION
+  fi
+fi
+
+if [[ "${BUILDKITE_LABEL}" == ":docker: Build and Deploy" ]]; then
+  echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+fi
+
+if [[ "${BUILDKITE_LABEL}" == ":docker: Deploy Manifest" ]]; then
+  echo "--- :go: :react: :swagger: Extract pre-built binary"
+  buildkite-agent artifact download "authelia-linux-*-musl.tar.gz" .
+  for archive in authelia-linux-*-musl.tar.gz; do tar xzf "${archive}" --wildcards "authelia-linux-*"; done
+fi
+
+if [[ "${BUILDKITE_LABEL}" == ":github: Deploy Artifacts" ]]; then
+  buildkite-agent artifact download "authelia-*.tar.gz*" .
+  buildkite-agent artifact download "authelia_*.deb*" .
+fi
+
+if [[ "${BUILDKITE_LABEL}" == ":debian: :fedora: :ubuntu: Deploy APT" ]]; then
+  buildkite-agent artifact download "authelia_*.deb" .
+fi

@@ -1,0 +1,28 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Public resource</title>
+    <link rel="icon" href="/icon.png" type="image/png" />
+    <script>
+      window.onload = () =>{
+        /**
+         * this section renames example.com for the real hostname
+         * it's required for multi cookie domain suite
+         * */
+        const hostname = window.location.hostname
+        const protocol = window.location.protocol
+        const port = window.location.port
+        const domain = hostname.replace(/^\w+\.(.+)$/i, "$1")
+        const newDomain = `${domain}:${port}`
+        document.body.innerHTML = document.body.innerHTML.replace(/example.com:8080/ig, newDomain)
+      }
+
+    </script>
+    </head>
+  <body>
+    <h1>Public resource</h1>
+    <p>This is a public resource.<br/>
+    Go back to <a href="https://home.example.com:8080/">home page</a>.
+    </p>
+  </body>
+</html>

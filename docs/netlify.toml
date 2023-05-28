@@ -1,0 +1,43 @@
+[build]
+  publish = "public"
+  functions = "functions"
+
+[build.environment]
+  NODE_VERSION = "16.18.1"
+  NPM_VERSION = "8.19.2"
+  GO_VERSION = "1.20.1"
+
+[context.production]
+  command = "pnpm run build"
+
+[context.deploy-preview]
+  command = "pnpm run build --baseURL $DEPLOY_URL"
+
+[context.branch-deploy]
+  command = "pnpm run build --baseURL $DEPLOY_URL"
+
+[context.next]
+  command = "pnpm run build"
+
+[context.next.environment]
+  HUGO_ENV = "next"
+
+[[plugins]]
+  package = "netlify-plugin-submit-sitemap"
+
+	[plugins.inputs]
+    baseUrl = "https://www.authelia.com/"
+    sitemapPath = "/sitemap.xml"
+    ignorePeriod = 0
+    providers = [
+      "google",
+      "yandex"
+    ]
+
+[dev]
+  framework = "#custom"
+  command = "npm run start"
+  targetPort = 1313
+  port = 8888
+  publish = "public"
+  autoLaunch = false

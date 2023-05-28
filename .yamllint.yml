@@ -1,0 +1,31 @@
+---
+extends: default
+
+locale: en_US.UTF-8
+
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+ignore: |
+  api/openapi.yml
+  docs/pnpm-lock.yaml
+  docs/node_modules/
+  internal/configuration/test_resources/config_bad_quoting.yml
+  web/pnpm-lock.yaml
+  web/node_modules/
+  .github/ISSUE_TEMPLATE/feature-request.yml
+  .github/ISSUE_TEMPLATE/bug-report.yml
+rules:
+  document-end:
+    level: warning
+  empty-values:
+    level: warning
+  indentation:
+    spaces: 2
+    check-multi-line-strings: true
+  line-length:
+    max: 120
+  octal-values: enable
+...

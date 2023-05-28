@@ -1,0 +1,9 @@
+---
+version: '3'
+services:
+  authelia-backend:
+    volumes:
+      - './OneFactorOnly/configuration.yml:/config/configuration.yml:ro'
+      - './OneFactorOnly/users.yml:/config/users.yml'
+      - './common/pki:/pki:ro'
+...

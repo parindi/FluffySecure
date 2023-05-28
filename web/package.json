@@ -1,0 +1,107 @@
+{
+  "name": "authelia",
+  "version": "4.37.5",
+  "private": true,
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@types/react": "18",
+        "react": "18"
+      }
+    }
+  },
+  "dependencies": {
+    "@emotion/cache": "11.11.0",
+    "@emotion/react": "11.11.0",
+    "@emotion/styled": "11.11.0",
+    "@fortawesome/fontawesome-svg-core": "6.4.0",
+    "@fortawesome/free-regular-svg-icons": "6.4.0",
+    "@fortawesome/free-solid-svg-icons": "6.4.0",
+    "@fortawesome/react-fontawesome": "0.2.0",
+    "@mui/icons-material": "5.11.16",
+    "@mui/material": "5.13.2",
+    "@mui/styles": "5.13.2",
+    "axios": "1.4.0",
+    "broadcast-channel": "5.1.0",
+    "classnames": "2.3.2",
+    "i18next": "22.5.0",
+    "i18next-browser-languagedetector": "7.0.1",
+    "i18next-http-backend": "2.2.1",
+    "qrcode.react": "3.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-i18next": "12.3.1",
+    "react-loading": "2.0.3",
+    "react-router-dom": "6.11.2",
+    "react18-input-otp": "1.1.3",
+    "zxcvbn": "4.4.2"
+  },
+  "scripts": {
+    "prepare": "cd .. && husky install .github",
+    "start": "vite --host",
+    "build": "vite build",
+    "coverage": "VITE_COVERAGE=true vite build",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --coverage",
+    "test:preview": "vitest-preview",
+    "report": "nyc report -r clover -r json -r lcov -r text"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.6.3",
+    "@commitlint/config-conventional": "17.6.3",
+    "@limegrass/eslint-plugin-import-alias": "1.0.6",
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "14.0.0",
+    "@types/node": "20.2.5",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "@types/testing-library__jest-dom": "5.14.6",
+    "@types/zxcvbn": "4.4.1",
+    "@typescript-eslint/eslint-plugin": "5.59.7",
+    "@typescript-eslint/parser": "5.59.7",
+    "@vitejs/plugin-react": "4.0.0",
+    "@vitest/coverage-istanbul": "0.31.1",
+    "esbuild": "0.17.19",
+    "eslint": "8.41.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-config-react-app": "7.0.1",
+    "eslint-formatter-rdjson": "1.0.5",
+    "eslint-import-resolver-typescript": "3.5.5",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "happy-dom": "9.20.3",
+    "husky": "8.0.3",
+    "prettier": "2.8.8",
+    "react-test-renderer": "18.2.0",
+    "typescript": "5.0.4",
+    "vite": "4.3.9",
+    "vite-plugin-eslint": "1.8.1",
+    "vite-plugin-istanbul": "4.1.0",
+    "vite-plugin-svgr": "3.2.0",
+    "vite-tsconfig-paths": "4.2.0",
+    "vitest": "0.31.1",
+    "vitest-preview": "0.0.1"
+  }
+}

@@ -1,0 +1,9 @@
+---
+version: '3'
+services:
+  authelia-backend:
+    volumes:
+      - './MySQL/configuration.yml:/config/configuration.yml:ro'
+      - './MySQL/users.yml:/config/users.yml'
+      - './common/pki:/pki:ro'
+...
