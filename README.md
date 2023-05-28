@@ -2,18 +2,11 @@ This is an open-source authentication and authorization server providing two-fac
 sign-on (SSO) for your applications via a web portal. It acts as a companion for [reverse proxies](#proxy-support) by
 allowing, denying, or redirecting requests.
 
-The following is a simple diagram of the architecture:
-
-<p align="center" style="margin:50px">
-  <img src="https://www.authelia.com/images/archi.png"/>
-</p>
-
 The software can be installed as a standalone service from the [AUR](https://aur.archlinux.org/packages/authelia/),
 [APT](https://apt.authelia.com/stable/debian/packages/authelia/),
 [FreeBSD Ports](https://svnweb.freebsd.org/ports/head/www/authelia/), or using a
 [static binary](https://github.com/authelia/authelia/releases/latest),
 [.deb package]((https://github.com/authelia/authelia/releases/latest)), as a container on [Docker] or [Kubernetes].
-
 
 Deployment can be orchestrated via the Helm [Chart](https://charts.authelia.com) (beta) leveraging ingress controllers
 and ingress configurations.
