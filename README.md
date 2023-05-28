@@ -82,11 +82,3 @@ Now that you have tested **Authelia** and you want to try it out in your own inf
 you can learn how to deploy and use it with [Deployment](https://www.authelia.com/docs/deployment/deployment-ha).
 This guide will show you how to deploy it on bare metal as well as on
 [Kubernetes](https://kubernetes.io/).
-
-## Security
-
-Authelia takes security very seriously. If you discover a vulnerability in Authelia, please see our
-[Security Policy](https://github.com/authelia/authelia/security/policy).
-
-For more information about [security](https://www.authelia.com/information/security/) related matters, please read
-[the documentation](https://www.authelia.com/information/security/).
