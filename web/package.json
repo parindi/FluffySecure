@@ -22,7 +22,7 @@
     "@mui/material": "5.13.2",
     "@mui/styles": "5.13.2",
     "axios": "1.4.0",
-    "broadcast-channel": "5.1.0",
+    "broadcast-channel": "5.3.0",
     "classnames": "2.3.2",
     "i18next": "22.5.0",
     "i18next-browser-languagedetector": "7.0.1",
